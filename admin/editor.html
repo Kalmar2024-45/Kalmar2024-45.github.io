@@ -13,7 +13,7 @@
 <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
 <pre id="output"></pre>
 </div>
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script src="ckeditor/ckeditor/ckeditor.js"></script>
 <script>let editorInstance;ClassicEditor.create(document.querySelector("#editor")).then(editor=>{editorInstance=editor;}).catch(error=>{console.error(error);});function showHtml(){const html=editorInstance.getData();document.getElementById("output").textContent=html;}</script>
 </body>
 </html>
