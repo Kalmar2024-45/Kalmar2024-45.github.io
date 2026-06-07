@@ -2,10 +2,21 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Moja strona GitHub Pages</title>
+  <title>Kalmar2024-45</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Strona działa 🚀</h1>
-  <p>To jest pierwsza wersja strony w repozytorium GitHub.</p>
+<header>
+  <h1>Kalmar2024-45</h1>
+  <nav>
+    <a href="/">Start</a>
+    <a href="#oferta">Oferta</a>
+    <a href="#kontakt">Kontakt</a>
+    <a href="admin/editor.html">Edytor</a>
+  </nav>
+</header>
+<main id="content">Ladowanie tresci...</main>
+<footer>© 2026 Kalmar2024-45</footer>
+<script>fetch("pages/home.html").then(r=>r.text()).then(html=>{document.getElementById("content").innerHTML=html;}).catch(e=>{document.getElementById("content").innerHTML="<p>Nie udalo sie zaladowac tresci.</p>";console.error(e);});</script>
 </body>
 </html>
