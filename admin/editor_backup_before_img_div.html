@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Edytor tresci - CKEditor 5</title>
+
+  <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/48.2.0/ckeditor5.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #f3f4f6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    .info {
+      background: #eef2ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 20px;
+      cursor: pointer;
+      border: 0;
+      border-radius: 8px;
+      background: #111827;
+      color: white;
+    }
+
+    button.secondary {
+      background: #374151;
+    }
+
+    pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 20px;
+      white-space: pre-wrap;
+      border-radius: 8px;
+      margin-top: 20px;
+      min-height: 120px;
+      overflow-x: auto;
+    }
+
+    .a11y-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+    }
+
+    .a11y-ok {
+      background: #ecfdf5;
+      border-color: #bbf7d0;
+    }
+
+    .a11y-box ul {
+      margin-top: 10px;
+    }
+
+    .ck-editor__editable {
+      min-height: 420px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Edytor tresci strony - CKEditor 5</h1>
+
+  <div class="info">
+    <p>
+      Edytuj tresc, kliknij <strong>Pokaz HTML</strong>, skopiuj wynik i wklej go do pliku
+      <strong>pages/home.html</strong>. Przycisk <strong>Sprawdz dostepnosc</strong> wykrywa podstawowe problemy:
+      obrazki bez ALT, puste naglowki, przeskoki w naglowkach, slabe teksty linkow i tabele bez naglowkow.
+    </p>
+  </div>
+
+  <div id="editor">
+    <section>
+      <h2>Witaj na mojej stronie</h2>
+      <p>Edytuj te tresc w CKEditor 5.</p>
+    </section>
+
+    <section id="oferta">
+      <h2>Oferta</h2>
+      <p>Tutaj wpisz swoja oferte.</p>
+    </section>
+
+    <section id="kontakt">
+      <h2>Kontakt</h2>
+      <p>Adres e-mail: kontakt@example.com</p>
+    </section>
+  </div>
+
+  <div class="buttons">
+    <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
+    <button class="secondary" onclick="copyHtml()">Kopiuj HTML</button>
+    <button class="secondary" onclick="checkAccessibility()">Sprawdz dostepnosc</button>
+  </div>
+
+  <div id="a11yResults" class="a11y-box" style="display:none;"></div>
+
+  <pre id="output"></pre>
+</div>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/48.2.0/ckeditor5.umd.js"></script>
+
+<script>
+  let editorInstance;
+
+  const pluginNames = [
+    'Essentials',
+    'Paragraph',
+    'Bold',
+    'Italic',
+    'Underline',
+    'Strikethrough',
+    'Heading',
+    'Link',
+    'List',
+    'BlockQuote',
+    'Font',
+    'Alignment',
+    'Table',
+    'TableToolbar',
+    'GeneralHtmlSupport',
+    'SourceEditing',
+    'AccessibilityHelp'
+  ];
+
+  const plugins = pluginNames
+    .map(name => CKEDITOR[name])
+    .filter(plugin => !!plugin);
+
+  CKEDITOR.ClassicEditor
+    .create(document.querySelector('#editor'), {
+      licenseKey: 'GPL',
+      plugins: plugins,
+
+      toolbar: {
+        items: [
+          'undo', 'redo',
+          '|',
+          'sourceEditing',
+          '|',
+          'heading',
+          '|',
+          'bold', 'italic', 'underline', 'strikethrough',
+          '|',
+          'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor',
+          '|',
+          'alignment',
+          '|',
+          'bulletedList', 'numberedList',
+          '|',
+          'link', 'blockQuote',
+          '|',
+          'insertTable',
+          '|',
+          'accessibilityHelp'
+        ],
+        shouldNotGroupWhenFull: true
+      },
+
+      htmlSupport: {
+        allow: [
+          {
+            name: /.*/,
+            attributes: true,
+            classes: true,
+            styles: true
+          }
+        ]
+      },
+
+      table: {
+        contentToolbar: [
+          'tableColumn',
+          'tableRow',
+          'mergeTableCells'
+        ]
+      }
+    })
+    .then(editor => {
+      editorInstance = editor;
+      document.getElementById('output').textContent = 'CKEditor 5 zaladowany poprawnie.';
+    })
+    .catch(error => {
+      console.error(error);
+      document.getElementById('output').textContent = 'Blad ladowania CKEditor 5: ' + error.message;
+    });
+
+  function showHtml() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie zostal zaladowany.';
+      return;
+    }
+
+    document.getElementById('output').textContent = editorInstance.getData();
+  }
+
+  async function copyHtml() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie zostal zaladowany.';
+      return;
+    }
+
+    const html = editorInstance.getData();
+    await navigator.clipboard.writeText(html);
+    document.getElementById('output').textContent = 'HTML skopiowany do schowka.';
+  }
+
+  function checkAccessibility() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie zostal zaladowany.';
+      return;
+    }
+
+    const html = editorInstance.getData();
+    const doc = new DOMParser().parseFromString('<main>' + html + '</main>', 'text/html');
+    const issues = [];
+
+    doc.querySelectorAll('img').forEach((img, index) => {
+      if (!img.hasAttribute('alt')) {
+        issues.push('Obraz nr ' + (index + 1) + ' nie ma atrybutu alt.');
+      }
+
+      if (img.hasAttribute('alt') && img.getAttribute('alt').trim().length > 140) {
+        issues.push('Obraz nr ' + (index + 1) + ' ma bardzo dlugi alt. Rozwaz skrocenie opisu.');
+      }
+    });
+
+    const headings = Array.from(doc.querySelectorAll('h1,h2,h3,h4,h5,h6'));
+    let previousLevel = 0;
+
+    headings.forEach((heading, index) => {
+      const level = Number(heading.tagName.substring(1));
+      const text = heading.textContent.trim();
+
+      if (!text) {
+        issues.push('Naglowek nr ' + (index + 1) + ' jest pusty.');
+      }
+
+      if (previousLevel && level > previousLevel + 1) {
+        issues.push('Przeskok poziomu naglowka: z H' + previousLevel + ' do H' + level + '.');
+      }
+
+      previousLevel = level;
+    });
+
+    doc.querySelectorAll('a').forEach((link, index) => {
+      const text = link.textContent.trim().toLowerCase();
+      const weakTexts = ['kliknij tutaj', 'tutaj', 'wiecej', 'czytaj wiecej', 'link'];
+
+      if (!text) {
+        issues.push('Link nr ' + (index + 1) + ' nie ma tekstu.');
+      }
+
+      if (weakTexts.includes(text)) {
+        issues.push('Link nr ' + (index + 1) + ' ma malo opisowy tekst: "' + text + '".');
+      }
+    });
+
+    doc.querySelectorAll('table').forEach((table, index) => {
+      if (!table.querySelector('th')) {
+        issues.push('Tabela nr ' + (index + 1) + ' nie ma komorek naglowkowych <th>.');
+      }
+    });
+
+    const box = document.getElementById('a11yResults');
+    box.style.display = 'block';
+
+    if (issues.length === 0) {
+      box.className = 'a11y-box a11y-ok';
+      box.innerHTML = '<strong>OK:</strong> Nie znaleziono podstawowych problemow dostepnosci.';
+      return;
+    }
+
+    box.className = 'a11y-box';
+    box.innerHTML = '<strong>Znalezione problemy:</strong><ul>' +
+      issues.map(issue => '<li>' + escapeHtml(issue) + '</li>').join('') +
+      '</ul>';
+  }
+
+  function escapeHtml(text) {
+    return text
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+</script>
+
+</body>
+</html>
