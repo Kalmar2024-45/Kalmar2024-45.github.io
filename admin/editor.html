@@ -28,7 +28,7 @@
   <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
   <pre id="output"></pre>
 </div>
-<script src="ckeditor/ckeditor.js?v=4.25.1-lts"></script>
-<script>if(window.CKEDITOR){CKEDITOR.replace("editor",{height:420});}else{document.getElementById("output").textContent="Blad: nie znaleziono CKEditor 4.";};function showHtml(){if(window.CKEDITOR && CKEDITOR.instances.editor){document.getElementById("output").textContent=CKEDITOR.instances.editor.getData();}else{document.getElementById("output").textContent="Edytor nie zostal zaladowany.";}}</script>
+<script>window.CKEDITOR_BASEPATH="/admin/ckeditor/";function startEditor(){try{if(!window.CKEDITOR){document.getElementById("output").textContent="Blad: plik ckeditor.js nie zostal zaladowany.";return;}CKEDITOR.replace("editor",{height:420,licenseKey:""});}catch(e){document.getElementById("output").textContent="Blad inicjalizacji CKEditor: "+e.message;console.error(e);}}function showHtml(){if(window.CKEDITOR && CKEDITOR.instances.editor){document.getElementById("output").textContent=CKEDITOR.instances.editor.getData();}else{document.getElementById("output").textContent="Edytor nie zostal zaladowany. Sprawdz czy dziala /admin/ckeditor/ckeditor.js oraz czy wersja LTS ma licenseKey.";}}</script>
+<script src="/admin/ckeditor/ckeditor.js?v=4.25.1-lts" onload="startEditor()" onerror="document.getElementById('output').textContent='Blad: nie moge pobrac /admin/ckeditor/ckeditor.js';"></script>
 </body>
 </html>
