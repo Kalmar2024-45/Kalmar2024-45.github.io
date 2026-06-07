@@ -14,7 +14,7 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: auto;
       background: white;
       padding: 30px;
@@ -72,12 +72,8 @@
       border-color: #bbf7d0;
     }
 
-    .a11y-box ul {
-      margin-top: 10px;
-    }
-
     .ck-editor__editable {
-      min-height: 420px;
+      min-height: 450px;
     }
   </style>
 </head>
@@ -88,9 +84,8 @@
 
   <div class="info">
     <p>
-      Edytuj tresc, kliknij <strong>Pokaz HTML</strong>, skopiuj wynik i wklej go do pliku
-      <strong>pages/home.html</strong>. Przycisk <strong>Sprawdz dostepnosc</strong> wykrywa podstawowe problemy:
-      obrazki bez ALT, puste naglowki, przeskoki w naglowkach, slabe teksty linkow i tabele bez naglowkow.
+      Obraz dodawaj jako URL albo sciezke z repo, np. <strong>/assets/obraz.jpg</strong>.
+      DIV mozesz dodac przyciskiem <strong>Wstaw DIV</strong> albo recznie przez <strong>Source</strong>.
     </p>
   </div>
 
@@ -114,6 +109,8 @@
   <div class="buttons">
     <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
     <button class="secondary" onclick="copyHtml()">Kopiuj HTML</button>
+    <button class="secondary" onclick="insertImageByUrl()">Wstaw obraz z URL</button>
+    <button class="secondary" onclick="insertDiv()">Wstaw DIV</button>
     <button class="secondary" onclick="checkAccessibility()">Sprawdz dostepnosc</button>
   </div>
 
@@ -140,9 +137,26 @@
     'BlockQuote',
     'Font',
     'Alignment',
+
+    'Image',
+    'ImageBlock',
+    'ImageInline',
+    'ImageInsert',
+    'ImageInsertViaUrl',
+    'ImageCaption',
+    'ImageStyle',
+    'ImageToolbar',
+    'ImageResize',
+    'LinkImage',
+    'AutoImage',
+
     'Table',
     'TableToolbar',
+    'TableProperties',
+    'TableCellProperties',
+
     'GeneralHtmlSupport',
+    'HtmlEmbed',
     'SourceEditing',
     'AccessibilityHelp'
   ];
@@ -161,6 +175,7 @@
           'undo', 'redo',
           '|',
           'sourceEditing',
+          'htmlEmbed',
           '|',
           'heading',
           '|',
@@ -172,13 +187,43 @@
           '|',
           'bulletedList', 'numberedList',
           '|',
-          'link', 'blockQuote',
+          'link',
+          'insertImage',
+          'blockQuote',
           '|',
           'insertTable',
           '|',
           'accessibilityHelp'
         ],
         shouldNotGroupWhenFull: true
+      },
+
+      image: {
+        toolbar: [
+          'imageTextAlternative',
+          'toggleImageCaption',
+          '|',
+          'imageStyle:inline',
+          'imageStyle:block',
+          'imageStyle:side',
+          '|',
+          'resizeImage',
+          '|',
+          'linkImage'
+        ],
+        insert: {
+          type: 'auto'
+        }
+      },
+
+      table: {
+        contentToolbar: [
+          'tableColumn',
+          'tableRow',
+          'mergeTableCells',
+          'tableProperties',
+          'tableCellProperties'
+        ]
       },
 
       htmlSupport: {
@@ -192,17 +237,13 @@
         ]
       },
 
-      table: {
-        contentToolbar: [
-          'tableColumn',
-          'tableRow',
-          'mergeTableCells'
-        ]
+      htmlEmbed: {
+        showPreviews: true
       }
     })
     .then(editor => {
       editorInstance = editor;
-      document.getElementById('output').textContent = 'CKEditor 5 zaladowany poprawnie.';
+      document.getElementById('output').textContent = 'CKEditor 5 zaladowany. Dostepne: obrazki, DIV przez Source/HTML, tabele, checker.';
     })
     .catch(error => {
       console.error(error);
@@ -229,6 +270,40 @@
     document.getElementById('output').textContent = 'HTML skopiowany do schowka.';
   }
 
+  function insertImageByUrl() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie zostal zaladowany.';
+      return;
+    }
+
+    const src = prompt('Podaj adres obrazka, np. /assets/obraz.jpg albo https://...');
+    if (!src) return;
+
+    const alt = prompt('Podaj opis ALT obrazka:', 'Opis obrazka') || '';
+
+    const current = editorInstance.getData();
+    const html = current + '\n<figure class="image"><img src="' + escapeAttribute(src) + '" alt="' + escapeAttribute(alt) + '"></figure>';
+
+    editorInstance.setData(html);
+    document.getElementById('output').textContent = 'Dodano obraz. Kliknij "Pokaz HTML do wklejenia", aby zobaczyc wynik.';
+  }
+
+  function insertDiv() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie zostal zaladowany.';
+      return;
+    }
+
+    const className = prompt('Podaj klase CSS dla DIV:', 'blok-info') || 'blok-info';
+    const text = prompt('Podaj tekst w DIV:', 'To jest przykladowy blok DIV.') || 'To jest przykladowy blok DIV.';
+
+    const current = editorInstance.getData();
+    const html = current + '\n<div class="' + escapeAttribute(className) + '"><p>' + escapeHtml(text) + '</p></div>';
+
+    editorInstance.setData(html);
+    document.getElementById('output').textContent = 'Dodano DIV. Kliknij "Pokaz HTML do wklejenia", aby zobaczyc wynik.';
+  }
+
   function checkAccessibility() {
     if (!editorInstance) {
       document.getElementById('output').textContent = 'Edytor nie zostal zaladowany.';
@@ -240,12 +315,12 @@
     const issues = [];
 
     doc.querySelectorAll('img').forEach((img, index) => {
-      if (!img.hasAttribute('alt')) {
-        issues.push('Obraz nr ' + (index + 1) + ' nie ma atrybutu alt.');
+      if (!img.hasAttribute('alt') || img.getAttribute('alt').trim() === '') {
+        issues.push('Obraz nr ' + (index + 1) + ' nie ma opisu ALT.');
       }
 
       if (img.hasAttribute('alt') && img.getAttribute('alt').trim().length > 140) {
-        issues.push('Obraz nr ' + (index + 1) + ' ma bardzo dlugi alt. Rozwaz skrocenie opisu.');
+        issues.push('Obraz nr ' + (index + 1) + ' ma bardzo dlugi ALT.');
       }
     });
 
@@ -302,12 +377,16 @@
   }
 
   function escapeHtml(text) {
-    return text
+    return String(text)
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
+  }
+
+  function escapeAttribute(text) {
+    return escapeHtml(text).replaceAll('`', '&#096;');
   }
 </script>
 
