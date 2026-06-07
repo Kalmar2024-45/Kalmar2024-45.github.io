@@ -28,7 +28,7 @@
   <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
   <pre id="output"></pre>
 </div>
-<script src="ckeditor/ckeditor.js"></script>
+<script src="ckeditor/ckeditor.js?v=4.25.1-lts"></script>
 <script>if(window.CKEDITOR){CKEDITOR.replace("editor",{height:420});}else{document.getElementById("output").textContent="Blad: nie znaleziono CKEditor 4.";};function showHtml(){if(window.CKEDITOR && CKEDITOR.instances.editor){document.getElementById("output").textContent=CKEDITOR.instances.editor.getData();}else{document.getElementById("output").textContent="Edytor nie zostal zaladowany.";}}</script>
 </body>
 </html>
