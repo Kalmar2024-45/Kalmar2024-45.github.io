@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Edytor strony - CKEditor 5 + Flmngr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px 30px;
+    }
+
+    header a {
+      color: #bfdbfe;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+    }
+
+    .info {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    #editor {
+      min-height: 460px;
+      border: 1px solid #e5e7eb;
+      padding: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      background: #111827;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button.secondary {
+      background: #374151;
+    }
+
+    pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 20px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      min-height: 120px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <strong>Edytor strony</strong> —
+  <a href="../index.html">wróć do strony głównej</a>
+</header>
+
+<div class="container">
+  <h1>CKEditor 5 + Flmngr File Manager</h1>
+
+  <div class="info">
+    <p>
+      Ten edytor pozwala tworzyć HTML i wstawiać obrazki przez Flmngr.
+      Po kliknięciu <strong>Pokaż HTML</strong> skopiuj wynik i wklej go ręcznie do odpowiedniego miejsca w
+      <strong>index.html</strong>.
+    </p>
+    <p>
+      GitHub Pages nie zapisuje plików na serwerze. Obrazki dodane przez Flmngr będą działały tylko wtedy,
+      gdy skonfigurujesz storage/backend w panelu Flmngr.
+    </p>
+  </div>
+
+  <div id="editor">
+    <h2>Nowa treść strony</h2>
+    <p>Tutaj wpisz tekst, dodaj obrazki, linki i sekcje.</p>
+    <p>Po zakończeniu kliknij <strong>Pokaż HTML</strong>.</p>
+  </div>
+
+  <div class="buttons">
+    <button onclick="showHtml()">Pokaż HTML</button>
+    <button class="secondary" onclick="copyHtml()">Kopiuj HTML</button>
+  </div>
+
+  <pre id="output"></pre>
+</div>
+
+<script src="https://cloud.flmngr.com/v/latest/sdk/ckeditor5-flmngr.js"></script>
+
+<script>
+  let editorInstance = null;
+
+  CKEditor5WithFileManager.create(
+    document.querySelector('#editor'),
+    {
+      Flmngr: {
+        apiKey: 'Qn1BW1o7AlkfK8ajZViQhaLI'
+      }
+    }
+  )
+  .then(function(editor) {
+    editorInstance = editor;
+    document.getElementById('output').textContent = 'Edytor załadowany poprawnie.';
+  })
+  .catch(function(error) {
+    console.error(error);
+    document.getElementById('output').textContent = 'Błąd ładowania edytora: ' + error.message;
+  });
+
+  function showHtml() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie jest jeszcze gotowy.';
+      return;
+    }
+
+    document.getElementById('output').textContent = editorInstance.getData();
+  }
+
+  async function copyHtml() {
+    if (!editorInstance) {
+      document.getElementById('output').textContent = 'Edytor nie jest jeszcze gotowy.';
+      return;
+    }
+
+    const html = editorInstance.getData();
+
+    try {
+      await navigator.clipboard.writeText(html);
+      document.getElementById('output').textContent = 'HTML skopiowany do schowka.';
+    } catch (e) {
+      document.getElementById('output').textContent = html;
+    }
+  }
+</script>
+
+</body>
+</html>
