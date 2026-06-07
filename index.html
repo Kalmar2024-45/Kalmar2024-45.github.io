@@ -2,21 +2,35 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Kalmar2024-45</title>
+  <title>Moja strona firmowa</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
-  <h1>Kalmar2024-45</h1>
+  <h1>Moja strona</h1>
   <nav>
     <a href="/">Start</a>
     <a href="#oferta">Oferta</a>
     <a href="#kontakt">Kontakt</a>
-    <a href="admin/editor.html">Edytor</a>
   </nav>
 </header>
-<main id="content">Ladowanie tresci...</main>
-<footer>© 2026 Kalmar2024-45</footer>
-<script>fetch("pages/home.html").then(r=>r.text()).then(html=>{document.getElementById("content").innerHTML=html;}).catch(e=>{document.getElementById("content").innerHTML="<p>Nie udalo sie zaladowac tresci.</p>";console.error(e);});</script>
+
+<main id="content">
+  Ładowanie treści...
+</main>
+
+<footer>
+  © 2026 Moja firma
+</footer>
+
+<script>
+fetch('pages/home.html')
+  .then(response => response.text())
+  .then(html => {
+    document.getElementById('content').innerHTML = html;
+  });
+</script>
+
 </body>
 </html>
