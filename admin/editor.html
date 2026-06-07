@@ -2,18 +2,33 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Edytor tresci</title>
-  <style>body{font-family:Arial,sans-serif;margin:30px;background:#f3f4f6}.container{max-width:1000px;margin:auto;background:white;padding:30px;border-radius:12px}button{margin-top:20px;padding:12px 20px;cursor:pointer;border:0;border-radius:8px;background:#111827;color:white}pre{background:#111827;color:#e5e7eb;padding:20px;white-space:pre-wrap;border-radius:8px;margin-top:20px}.info{background:#eef2ff;padding:15px;border-radius:8px;margin-bottom:20px}</style>
+  <title>Edytor tresci - CKEditor 4</title>
+  <style>body{font-family:Arial,sans-serif;margin:30px;background:#f3f4f6}.container{max-width:1100px;margin:auto;background:white;padding:30px;border-radius:12px}.info{background:#eef2ff;padding:15px;border-radius:8px;margin-bottom:20px}button{margin-top:20px;padding:12px 20px;cursor:pointer;border:0;border-radius:8px;background:#111827;color:white}pre{background:#111827;color:#e5e7eb;padding:20px;white-space:pre-wrap;border-radius:8px;margin-top:20px;min-height:120px}</style>
 </head>
 <body>
 <div class="container">
-<h1>Edytor tresci strony</h1>
-<div class="info"><p>Edytuj tresc, kliknij przycisk, skopiuj HTML i wklej go do pliku <strong>pages/home.html</strong>.</p></div>
-<textarea id="editor"><section><h2>Witaj na mojej stronie</h2><p>Edytuj te tresc w CKEditor.</p></section><section id="oferta"><h2>Oferta</h2><p>Tutaj wpisz swoja oferte.</p></section><section id="kontakt"><h2>Kontakt</h2><p>Adres e-mail: kontakt@example.com</p></section></textarea>
-<button onclick="showHtml()">Pokaz HTML do wklejenia</button>
-<pre id="output"></pre>
+  <h1>Edytor tresci strony - CKEditor 4</h1>
+  <div class="info"><p>Edytuj tresc ponizej, kliknij <strong>Pokaz HTML</strong>, skopiuj wynik i wklej go do pliku <strong>pages/home.html</strong>.</p></div>
+  <textarea id="editor" name="editor">
+<section>
+  <h2>Witaj na mojej stronie</h2>
+  <p>Edytuj te tresc w CKEditor 4.</p>
+</section>
+
+<section id="oferta">
+  <h2>Oferta</h2>
+  <p>Tutaj wpisz swoja oferte.</p>
+</section>
+
+<section id="kontakt">
+  <h2>Kontakt</h2>
+  <p>Adres e-mail: kontakt@example.com</p>
+</section>
+  </textarea>
+  <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
+  <pre id="output"></pre>
 </div>
-<script src="ckeditor/ckeditor/ckeditor.js"></script>
-<script>let editorInstance;ClassicEditor.create(document.querySelector("#editor")).then(editor=>{editorInstance=editor;}).catch(error=>{console.error(error);});function showHtml(){const html=editorInstance.getData();document.getElementById("output").textContent=html;}</script>
+<script src="ckeditor/ckeditor.js"></script>
+<script>if(window.CKEDITOR){CKEDITOR.replace("editor",{height:400});}else{document.getElementById("output").textContent="Blad: nie znaleziono pliku ckeditor.js. Sprawdz sciezke folderu admin/ckeditor.";};function showHtml(){if(window.CKEDITOR && CKEDITOR.instances.editor){var html=CKEDITOR.instances.editor.getData();document.getElementById("output").textContent=html;}else{document.getElementById("output").textContent="Edytor CKEditor nie zostal zaladowany.";}}</script>
 </body>
 </html>
