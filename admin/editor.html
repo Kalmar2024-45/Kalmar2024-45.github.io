@@ -2,12 +2,12 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Edytor tresci - CKEditor 4</title>
+  <title>Edytor tresci - CKEditor 4.22.1</title>
   <style>body{font-family:Arial,sans-serif;margin:30px;background:#f3f4f6}.container{max-width:1100px;margin:auto;background:white;padding:30px;border-radius:12px}.info{background:#eef2ff;padding:15px;border-radius:8px;margin-bottom:20px}button{margin-top:20px;padding:12px 20px;cursor:pointer;border:0;border-radius:8px;background:#111827;color:white}pre{background:#111827;color:#e5e7eb;padding:20px;white-space:pre-wrap;border-radius:8px;margin-top:20px;min-height:120px}</style>
 </head>
 <body>
 <div class="container">
-  <h1>Edytor tresci strony - CKEditor 4</h1>
+  <h1>Edytor tresci strony - CKEditor 4.22.1</h1>
   <div class="info"><p>Edytuj tresc, kliknij <strong>Pokaz HTML</strong>, skopiuj wynik i wklej go do pliku <strong>pages/home.html</strong>.</p></div>
   <textarea id="editor" name="editor">
 <section>
@@ -28,7 +28,7 @@
   <button onclick="showHtml()">Pokaz HTML do wklejenia</button>
   <pre id="output"></pre>
 </div>
-<script>window.CKEDITOR_BASEPATH="/admin/ckeditor/";function startEditor(){try{if(!window.CKEDITOR){document.getElementById("output").textContent="Blad: plik ckeditor.js nie zostal zaladowany.";return;}CKEDITOR.replace("editor",{height:420,licenseKey:""});}catch(e){document.getElementById("output").textContent="Blad inicjalizacji CKEditor: "+e.message;console.error(e);}}function showHtml(){if(window.CKEDITOR && CKEDITOR.instances.editor){document.getElementById("output").textContent=CKEDITOR.instances.editor.getData();}else{document.getElementById("output").textContent="Edytor nie zostal zaladowany. Sprawdz czy dziala /admin/ckeditor/ckeditor.js oraz czy wersja LTS ma licenseKey.";}}</script>
-<script src="/admin/ckeditor/ckeditor.js?v=4.25.1-lts" onload="startEditor()" onerror="document.getElementById('output').textContent='Blad: nie moge pobrac /admin/ckeditor/ckeditor.js';"></script>
+<script src="ckeditor/ckeditor.js?v=4.22.1"></script>
+<script>if(window.CKEDITOR){CKEDITOR.replace("editor",{height:420});}else{document.getElementById("output").textContent="Blad: nie znaleziono CKEditor 4.";};function showHtml(){if(window.CKEDITOR && CKEDITOR.instances.editor){document.getElementById("output").textContent=CKEDITOR.instances.editor.getData();}else{document.getElementById("output").textContent="Edytor nie zostal zaladowany.";}}</script>
 </body>
 </html>
