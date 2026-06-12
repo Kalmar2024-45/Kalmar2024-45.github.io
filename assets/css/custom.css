@@ -101,3 +101,49 @@ margin-bottom: 0;
 grid-template-columns: 1fr;
 }
 }
+
+/* Wymuszone style kart na stronie głównej */
+
+#banner .banner-cards {
+display: grid !important;
+grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+gap: 1.25em !important;
+margin-top: 2em !important;
+width: 100% !important;
+}
+
+#banner .banner-cards .banner-card {
+display: block !important;
+background: rgba(255, 255, 255, 0.96) !important;
+color: #333 !important;
+text-decoration: none !important;
+border-radius: 14px !important;
+padding: 1.6em !important;
+box-shadow: 0 1em 2.5em rgba(0,0,0,0.22) !important;
+transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+border: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+#banner .banner-cards .banner-card:hover {
+transform: translateY(-4px) !important;
+box-shadow: 0 1.25em 3em rgba(0,0,0,0.30) !important;
+}
+
+#banner .banner-cards .banner-card h3 {
+margin: 0 0 0.6em 0 !important;
+color: #222 !important;
+font-size: 1.25em !important;
+}
+
+#banner .banner-cards .banner-card p {
+color: #555 !important;
+margin: 0 !important;
+line-height: 1.5 !important;
+font-size: 0.95em !important;
+}
+
+@media screen and (max-width: 980px) {
+#banner .banner-cards {
+grid-template-columns: 1fr !important;
+}
+}
